@@ -1,0 +1,15 @@
+#!/bin/bash
+name=/tmp/imagenet40-1000/imagenet40-1000
+dir=/d/Data/CVPR2021-02785/CVPR2021-02785/preprocessed/imagenet40-1000
+rm -rf /tmp/imagenet40-1000
+mkdir -p /tmp/imagenet40-1000
+rm -rf /d/Data/CVPR2021-02785/CVPR2021-02785/preprocessed/
+mkdir -p /d/Data/CVPR2021-02785/CVPR2021-02785/preprocessed/
+for subject in 1; do
+    mkdir -p $name-$subject
+done
+cd /d/Data/CVPR2021-02785/CVPR2021-02785/code/bin
+
+matlab -nosplash -nodesktop -r "run('D:\Data\CVPR2021-02785\CVPR2021-02785\code\bin\test_EEG.m');exit;"
+
+# rm -rf /tmp/imagenet40-1000

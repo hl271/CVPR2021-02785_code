@@ -1,0 +1,14 @@
+#!/bin/bash
+rm -rf two-class-accuracy-matrix
+rm -f *.pyc
+for classifier in LSTM K-NN SVM MLP CNN EEGNet SyncNet EEGChannelNet; do
+    python two_class_accuracy_matrix.py \
+	   -iv image \
+	   -c $classifier \
+	   -p 0.005 \
+	   -s 40000
+done
+rm -f *.pyc
+rsync -a -v -z two-class-accuracy-matrix/*.png \
+      ~/common/documentation/cvpr2021a/images/.
+rm -rf two-class-accuracy-matrix

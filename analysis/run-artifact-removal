@@ -1,0 +1,44 @@
+#!/bin/bash
+
+subject=1
+DIR=/aux/qobi/eeg-datasets/imagenet40-1000/preprocessed/imagenet40-1000
+kind=from-scratch
+
+rm -f SVM-artifact-removal.pkl CNN-artifact-removal.pkl EEGNet-artifact-removal.pkl
+rm -f *.pyc
+
+unbuff >SVM-artifact-removal.txt python main_loop.py \
+       -iv image\
+       -rf SVM-artifact-removal.pkl \
+       -s $subject \
+       -r "imagenet40-1000" \
+       -ed $DIR-$subject.pth \
+       -sp $DIR-${subject}_split_artifact_removal.pth \
+       -f 5 \
+       -c SVM \
+       -gpu 0 \
+       -k $kind&
+
+unbuff >CNN-artifact-removal.txt python main_loop.py \
+       -iv image\
+       -rf CNN-artifact-removal.pkl \
+       -s $subject \
+       -r "imagenet40-1000" \
+       -ed $DIR-$subject.pth \
+       -sp $DIR-${subject}_split_artifact_removal.pth \
+       -f 5 \
+       -c CNN \
+       -gpu 0 \
+       -k $kind&
+
+unbuff >EEGNet-artifact-removal.txt python main_loop.py \
+       -iv image\
+       -rf EEGNet-artifact-removal.pkl \
+       -s $subject \
+       -r "imagenet40-1000" \
+       -ed $DIR-$subject.pth \
+       -sp $DIR-${subject}_split_artifact_removal.pth \
+       -f 5 \
+       -c EEGNet \
+       -gpu 1 \
+       -k $kind&

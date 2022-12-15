@@ -1,0 +1,44 @@
+#!/bin/bash
+
+subject=1
+DIR=/aux/qobi/eeg-datasets/imagenet40-1000/preprocessed/imagenet40-1000
+kind=from-scratch
+
+rm -f K-NN-pmtm.pkl SVM-pmtm.pkl MLP-pmtm.pkl
+rm -f *.pyc
+
+unbuff >K-NN-pmtm.txt python main_loop_pmtm.py \
+       -iv image\
+       -rf K-NN-pmtm.pkl \
+       -s $subject \
+       -r "imagenet40-1000" \
+       -ed $DIR-$subject-pmtm.pth \
+       -sp $DIR-${subject}_split.pth \
+       -f 5 \
+       -c K-NN \
+       -gpu 0 \
+       -k $kind&
+
+unbuff >SVM-pmtm.txt python main_loop_pmtm.py \
+       -iv image\
+       -rf SVM-pmtm.pkl \
+       -s $subject \
+       -r "imagenet40-1000" \
+       -ed $DIR-$subject-pmtm.pth \
+       -sp $DIR-${subject}_split.pth \
+       -f 5 \
+       -c SVM \
+       -gpu 0 \
+       -k $kind&
+
+unbuff >MLP-pmtm.txt python main_loop_pmtm.py \
+       -iv image\
+       -rf MLP-pmtm.pkl \
+       -s $subject \
+       -r "imagenet40-1000" \
+       -ed $DIR-$subject-pmtm.pth \
+       -sp $DIR-${subject}_split.pth \
+       -f 5 \
+       -c MLP \
+       -gpu 2 \
+       -k $kind&

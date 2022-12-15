@@ -1,0 +1,45 @@
+#!/bin/bash
+
+subject=1
+ED=/aux/qobi/eeg-datasets/spampinato/preprocessed/spampinato-cross-subject-image-rapid-event-no-bandpass.pth
+SP=/aux/qobi/eeg-datasets/spampinato/preprocessed/spampinato-cross-subject-image-rapid-event-no-bandpass_split.pth
+kind=from-scratch
+
+rm -f SVM-cross-subject.pkl CNN-cross-subject.pkl EEGNet-cross-subject.pkl
+rm -f *.pyc
+
+unbuff >SVM-cross-subject.txt python main_loop.py \
+       -iv image\
+       -rf SVM-cross-subject.pkl \
+       -s $subject \
+       -r "cross-subject" \
+       -ed $ED \
+       -sp $SP \
+       -f 6 \
+       -c SVM \
+       -gpu 0 \
+       -k $kind&
+
+unbuff >CNN-cross-subject.txt python main_loop.py \
+       -iv image\
+       -rf CNN-cross-subject.pkl \
+       -s $subject \
+       -r "cross-subject" \
+       -ed $ED \
+       -sp $SP \
+       -f 6 \
+       -c CNN \
+       -gpu 3 \
+       -k $kind&
+
+unbuff >EEGNet-cross-subject.txt python main_loop.py \
+       -iv image\
+       -rf EEGNet-cross-subject.pkl \
+       -s $subject \
+       -r "cross-subject" \
+       -ed $ED \
+       -sp $SP \
+       -f 6 \
+       -c EEGNet \
+       -gpu 4 \
+       -k $kind&

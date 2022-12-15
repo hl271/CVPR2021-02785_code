@@ -1,0 +1,16 @@
+#!/bin/bash
+rm -rf image-full-accuracy.tex
+rm -rf image-artifact-removal.tex
+rm -rf image-pmtm.tex
+rm -rf image-cross-subject.tex
+rm -f *.pyc
+python accuracy_tables.py -iv image -p 0.005
+rm -f *.pyc
+rsync -a -v -z image-full-accuracy.tex ~/common/documentation/cvpr2021a/.
+rsync -a -v -z image-artifact-removal.tex ~/common/documentation/cvpr2021a/.
+rsync -a -v -z image-pmtm.tex ~/common/documentation/cvpr2021a/.
+rsync -a -v -z image-cross-subject.tex ~/common/documentation/cvpr2021a/.
+rm -rf image-full-accuracy.tex
+rm -rf image-artifact-removal.tex
+rm -rf image-pmtm.tex
+rm -rf image-cross-subject.tex

@@ -1,0 +1,105 @@
+#!/bin/bash
+
+subject=1
+DIR=/aux/qobi/eeg-datasets/imagenet40-1000/preprocessed/imagenet40-1000
+kind=no-model-file
+MODEL=$1
+
+if [ $MODEL == LSTM ]; then
+    GPU=`seq 0 8`
+    GPUs=9
+elif [ $MODEL == LSTM1 ]; then
+    GPU=`seq 0 8`
+    GPUs=9
+elif [ $MODEL == LSTM2 ]; then
+    GPU=`seq 0 8`
+    GPUs=9
+elif [ $MODEL == LSTM3 ]; then
+    GPU=`seq 0 8`
+    GPUs=9
+elif [ $MODEL == LSTM4 ]; then
+    GPU=`seq 0 8`
+    GPUs=9
+elif [ $MODEL == K-NN ]; then
+    GPU=`seq 0 23`
+    GPUs=24
+elif [ $MODEL == SVM ]; then
+    GPU=`seq 0 23`
+    GPUs=24
+elif [ $MODEL == MLP ]; then
+    GPU=`seq 0 8`
+    GPUs=9
+elif [ $MODEL == CNN ]; then
+    GPU=`seq 0 8`
+    GPUs=9
+elif [ $MODEL == SCNN ]; then
+    GPU=`seq 0 8`
+    GPUs=9
+elif [ $MODEL == EEGNet ]; then
+    GPU=`seq 0 8`
+    GPUs=9
+elif [ $MODEL == SyncNet ]; then
+    GPU=`seq 0 8`
+    GPUs=9
+elif [ $MODEL == EEGChannelNet ]; then
+    GPU=`seq 0 8`
+    GPUs=9
+fi
+
+rm -f *.pyc
+rm -rf image-*-two-way image-*-add
+rm -f stat-image-*.txt
+rm -f *-add-one-more-class-*.txt
+
+for gpu in $GPU; do
+    unbuff >>$MODEL-add-one-more-class-$gpu.txt \
+	   python add_one_more_class_in_parallel.py \
+	   -iv image\
+	   -ed $DIR-$subject.pth \
+	   -sp $DIR-${subject}_split.pth \
+	   -f 5 \
+	   -c $MODEL \
+	   -gpu $gpu \
+	   -gpus $GPUs \
+	   -k $kind \
+	   -cmd run_all_two_class_jobs&
+done
+wait
+unbuff >>$MODEL-add-one-more-class-0.txt \
+       python add_one_more_class_in_parallel.py \
+       -iv image\
+       -ed $DIR-$subject.pth \
+       -sp $DIR-${subject}_split.pth \
+       -f 5 \
+       -c $MODEL \
+       -gpu 0 \
+       -gpus $GPUs \
+       -k $kind \
+       -cmd run_init_add_one_more_class
+for i in `seq 2 40`; do
+    for gpu in $GPU; do
+	unbuff >>$MODEL-add-one-more-class-$gpu.txt \
+	       python add_one_more_class_in_parallel.py \
+	       -iv image\
+	       -ed $DIR-$subject.pth \
+	       -sp $DIR-${subject}_split.pth \
+	       -f 5 \
+	       -c $MODEL \
+	       -gpu $gpu \
+	       -gpus $GPUs \
+	       -k $kind \
+	       -cmd run_all_add_one_more_class_jobs&
+    done
+    wait
+    unbuff >>$MODEL-add-one-more-class-0.txt \
+	   python add_one_more_class_in_parallel.py \
+	   -iv image\
+	   -ed $DIR-$subject.pth \
+	   -sp $DIR-${subject}_split.pth \
+	   -f 5 \
+	   -c $MODEL \
+	   -gpu 0 \
+	   -gpus $GPUs \
+	   -k $kind \
+	   -cmd run_after_add_one_more_class
+done

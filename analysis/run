@@ -1,0 +1,117 @@
+#!/bin/bash
+
+subject=1
+DIR=/aux/qobi/eeg-datasets/imagenet40-1000/preprocessed/imagenet40-1000
+kind=from-scratch
+
+rm -f LSTM.pkl K-NN.pkl SVM.pkl MLP.pkl CNN.pkl SCNN.pkl EEGNet.pkl \
+      SyncNet.pkl EEGChannelNet.pkl
+rm -f *.pyc
+
+unbuff >LSTM.txt python main_loop.py \
+       -iv image\
+       -rf LSTM.pkl \
+       -s $subject \
+       -r "imagenet40-1000" \
+       -ed $DIR-$subject.pth \
+       -sp $DIR-${subject}_split.pth \
+       -f 5 \
+       -c LSTM \
+       -gpu 0 \
+       -k $kind&
+
+unbuff >K-NN.txt python main_loop.py \
+       -iv image\
+       -rf K-NN.pkl \
+       -s $subject \
+       -r "imagenet40-1000" \
+       -ed $DIR-$subject.pth \
+       -sp $DIR-${subject}_split.pth \
+       -f 5 \
+       -c K-NN \
+       -gpu 0 \
+       -k $kind&
+
+unbuff >SVM.txt python main_loop.py \
+       -iv image\
+       -rf SVM.pkl \
+       -s $subject \
+       -r "imagenet40-1000" \
+       -ed $DIR-$subject.pth \
+       -sp $DIR-${subject}_split.pth \
+       -f 5 \
+       -c SVM \
+       -gpu 0 \
+       -k $kind&
+
+unbuff >MLP.txt python main_loop.py \
+       -iv image\
+       -rf MLP.pkl \
+       -s $subject \
+       -r "imagenet40-1000" \
+       -ed $DIR-$subject.pth \
+       -sp $DIR-${subject}_split.pth \
+       -f 5 \
+       -c MLP \
+       -gpu 1 \
+       -k $kind&
+
+unbuff >CNN.txt python main_loop.py \
+       -iv image\
+       -rf CNN.pkl \
+       -s $subject \
+       -r "imagenet40-1000" \
+       -ed $DIR-$subject.pth \
+       -sp $DIR-${subject}_split.pth \
+       -f 5 \
+       -c CNN \
+       -gpu 2 \
+       -k $kind&
+
+unbuff >SCNN.txt python main_loop.py \
+       -iv image\
+       -rf SCNN.pkl \
+       -s $subject \
+       -r "imagenet40-1000" \
+       -ed $DIR-$subject.pth \
+       -sp $DIR-${subject}_split.pth \
+       -f 5 \
+       -c SCNN \
+       -gpu 3 \
+       -k $kind&
+
+unbuff >EEGNet.txt python main_loop.py \
+       -iv image\
+       -rf EEGNet.pkl \
+       -s $subject \
+       -r "imagenet40-1000" \
+       -ed $DIR-$subject.pth \
+       -sp $DIR-${subject}_split.pth \
+       -f 5 \
+       -c EEGNet \
+       -gpu 4 \
+       -k $kind&
+
+unbuff >SyncNet.txt python main_loop.py \
+       -iv image\
+       -rf SyncNet.pkl \
+       -s $subject \
+       -r "imagenet40-1000" \
+       -ed $DIR-$subject.pth \
+       -sp $DIR-${subject}_split.pth \
+       -f 5 \
+       -c SyncNet \
+       -gpu 5 \
+       -k $kind&
+
+unbuff >EEGChannelNet.txt python main_loop.py \
+       -iv image\
+       -rf EEGChannelNet.pkl \
+       -s $subject \
+       -r "imagenet40-1000" \
+       -ed $DIR-$subject.pth \
+       -sp $DIR-${subject}_split.pth \
+       -f 5 \
+       -c EEGChannelNet \
+       -gpu 6 \
+       -k $kind&

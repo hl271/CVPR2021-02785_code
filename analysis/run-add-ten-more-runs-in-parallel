@@ -1,0 +1,36 @@
+#!/bin/bash
+
+subject=1
+DIR=/aux/qobi/eeg-datasets/imagenet40-1000/preprocessed/imagenet40-1000
+kind=no-model-file
+MODEL=$1
+
+if [ $MODEL == SVM ]; then
+    GPU=`seq 0 23`
+    GPUs=24
+elif [ $MODEL == CNN ]; then
+    GPU=`seq 0 8`
+    GPUs=9
+elif [ $MODEL == EEGNet ]; then
+    GPU=`seq 0 8`
+    GPUs=9
+fi
+
+rm -f svm*.pkl cnn*.pkl
+rm -f *.pyc
+
+for gpu in $GPU; do
+    unbuff >$MODEL-add-ten-more-runs-$gpu.txt \
+	   python add_ten_more_runs_in_parallel.py \
+       -iv image\
+       -rf $MODEL.pkl \
+       -s $subject \
+       -r "imagenet40-1000" \
+       -ed $DIR-$subject.pth \
+       -sp $DIR-${subject}_split.pth \
+       -f 5 \
+       -c $MODEL \
+       -gpu $gpu \
+       -gpus $GPUs \
+       -k $kind&
+done

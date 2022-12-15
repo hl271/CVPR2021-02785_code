@@ -1,0 +1,11 @@
+#!/bin/bash
+rm -f image-partial-accuracy.tex
+rm -f image-partial-accuracy.png
+rm -f *.pyc
+python add_ten_more_runs_plot_table.py -iv image -p 0.005 -s 40000
+rm -f *.pyc
+rsync -a -v -z image-partial-accuracy.tex ~/common/documentation/cvpr2021a/.
+rsync -a -v -z image-partial-accuracy.png \
+      ~/common/documentation/cvpr2021a/images/.
+rm -f image-partial-accuracy.tex
+rm -f image-partial-accuracy.png

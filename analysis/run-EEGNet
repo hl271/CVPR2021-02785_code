@@ -1,0 +1,20 @@
+#!/bin/bash
+
+subject=1
+DIR=/aux/qobi/eeg-datasets/imagenet40-1000/preprocessed/imagenet40-1000
+kind=from-scratch
+
+rm -f EEGNet.pkl
+rm -f *.pyc
+
+unbuff >EEGNet.txt python main_loop.py \
+       -iv image\
+       -rf EEGNet.pkl \
+       -s $subject \
+       -r "imagenet40-1000" \
+       -ed $DIR-$subject.pth \
+       -sp $DIR-${subject}_split.pth \
+       -f 5 \
+       -c EEGNet \
+       -gpu 8 \
+       -k $kind&

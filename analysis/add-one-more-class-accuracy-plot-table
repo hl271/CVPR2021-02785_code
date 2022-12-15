@@ -1,0 +1,10 @@
+#!/bin/bash
+rm -f image-accuracy.tex
+rm -f image-accuracy.png
+rm -f *.pyc
+python add_one_more_class_accuracy_plot_table.py -iv image -p 0.005 -s 40000
+rm -f *.pyc
+rsync -a -v -z image-accuracy.tex ~/common/documentation/cvpr2021a/.
+rsync -a -v -z image-accuracy.png ~/common/documentation/cvpr2021a/images/.
+rm -f image-accuracy.tex
+rm -f image-accuracy.png

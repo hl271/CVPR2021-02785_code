@@ -1,0 +1,5 @@
+#!/bin/bash
+./accuracy-tables
+./two-class-accuracy-matrices
+./add-one-more-class-accuracy-plot-table
+./add-ten-more-runs-plot-table

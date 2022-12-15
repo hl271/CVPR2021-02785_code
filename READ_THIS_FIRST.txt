@@ -1,0 +1,12 @@
+*** HOW TO OPEN BDF FILE IN EEGLAB (SIMPLE WAY)
+1) Open Git Bash (any folder)
+2) Run cmd "matlab -nosplash -nodesktop" 
+ATTENTION: This above cmd will run Matlab without GUI, which would reduce heavy load for the computer
+3) Inside Matlab, run:
+
+addpath('D:\Download\eeglab2020_0\eeglab2020_0');
+
+eeglab;
+
+4) A popup window will open. Choose File -> Import data -> Using the BIOSIG interface
+5) Follow the guide. When REFERENCE CHANNELs are asked, type in "[97 98]"
